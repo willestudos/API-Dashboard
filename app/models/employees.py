@@ -4,19 +4,19 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class EmployeeIn(BaseModel):
-    cpf: str = Field(..., regex=r"\d{11}")
-    nome: str
-    pis: str
+    document: str = Field(..., regex=r"\d{11}")  # CPF (Brazilian ID)
+    name: str
+    pis: str  # Brazilian social security number
     email: EmailStr
-    celular: str
-    estado_civil: str
-    cor_pele: str
-    escolaridade: str
-    recebe_quinzena: bool
-    recebe_vale_transporte: bool
-    filhos_menor_14: bool
+    cellphone: str
+    marital_status: str
+    skin_color: str
+    education_level: str
+    receives_biweekly_salary: bool
+    receives_transport_allowance: bool
+    has_children_under_14: bool
 
 
 class Employee(EmployeeIn):
     id: str
-    arquivos: List[str]  # ids do GridFS
+    files: List[str]  # ids do GridFS
