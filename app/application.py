@@ -6,7 +6,7 @@ from app.config.connection import on_appliction_shutdown, on_appliction_startup
 from app.config.lifetime import shutdown, startup
 from app.config.settings import settings
 from app.utils.logger import setup_logger
-from app.views import offices
+from app.views import healthcheck, offices
 
 setup_logger()
 LOGGER = logging.getLogger(__name__)
@@ -27,4 +27,5 @@ def get_app() -> FastAPI:
     app.on_event("shutdown")(shutdown(on_appliction_shutdown))
 
     app.include_router(offices.router)
+    app.include_router(healthcheck.router)
     return app
