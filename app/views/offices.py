@@ -13,4 +13,5 @@ router = APIRouter(prefix="/offices")
 @router.get("/")
 async def get_offices():
     setup_logger.info("get_offices")
-    return {"offices": ["office1", "office2"]}
+    response = {"offices": ["office1", "office2"]}
+    return response
