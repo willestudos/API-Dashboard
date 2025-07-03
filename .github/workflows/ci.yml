@@ -1,9 +1,5 @@
 name: CI Pipeline
 
-# Aciona o pipeline em:
-# 1. Pushes para QUALQUER branch.
-# 2. Pull Requests abertos para a branch 'main'. Isso serve como uma verificação
-#    final antes de mesclar o código.
 on:
   push:
   pull_request:
@@ -19,22 +15,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configura o Python e habilita o cache para o Poetry,
-      #    o que acelera as execuções futuras.
-      - name: Set up Python with Poetry caching
+      # 2. Configura o Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'poetry'
 
-      # 3. Instala o Poetry e as dependências do projeto definidas no
-      #    seu arquivo `pyproject.toml`.
+      # 3. Instala o Poetry de forma confiável usando uma ação dedicada
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true # Cria o .venv dentro do projeto, facilitando o cache
+
+      # 4. Habilita o cache para as dependências, acelerando o pipeline
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      # 5. Instala as dependências SÓ SE não houver um cache válido
       - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install --no-interaction --no-ansi
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
 
-      # 4. Executa os testes usando o ambiente virtual gerenciado pelo Poetry.
+      # 6. Executa os testes usando o ambiente do Poetry
       - name: Run tests with coverage
         run: |
           poetry run pytest --cov=app --cov-report=term-missing
