@@ -43,4 +43,4 @@ jobs:
       # 6. Executa os testes usando o ambiente do Poetry
       - name: Run tests with coverage
         run: |
-          poetry run pytest --cov=app --cov-report=term-missing
+          poetry run pytest --cov=app --cov-report=term-missing --cov-fail-under=90
