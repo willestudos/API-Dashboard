@@ -1,0 +1,46 @@
+name: CI Pipeline
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clona o repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Instala o Poetry de forma confiável usando uma ação dedicada
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true # Cria o .venv dentro do projeto, facilitando o cache
+
+      # 4. Habilita o cache para as dependências, acelerando o pipeline
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      # 5. Instala as dependências SÓ SE não houver um cache válido
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+
+      # 6. Executa os testes usando o ambiente do Poetry
+      - name: Run tests with coverage
+        run: |
+          poetry run pytest --cov=app --cov-report=term-missing --cov-fail-under=90
