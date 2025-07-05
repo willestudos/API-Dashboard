@@ -1,7 +1,7 @@
 import pytest
 
 from app.models.employees import Employee, EmployeeIn
-from app.utils.exceptions import CPFInvalidError
+from app.utils.exceptions import CPFInvalidError, EmailInvalidError
 
 
 def test_create_employee_in_with_valid_data():
@@ -54,28 +54,28 @@ def test_create_employee_in_with_invalid_cpf_raises_error():
     assert "Dígitos verificadores do CPF inválidos." in str(exc_info.value)
 
 
-# def test_create_employee_in_with_invalid_email_raises_error():
-#     """
-#     Testa se um ValidationError é levantado para um e-mail inválido.
-#     """
-#     invalid_data = {
-#         "document": "796.346.000-18",
-#         "name": "Carlos",
-#         "pis": "12345678901",
-#         "email": "email-invalido",  # Inválido
-#         "cellphone": "11987654321",
-#         "marital_status": "divorciado",
-#         "skin_color": "preta",
-#         "education_level": "pós-graduado",
-#         "receives_biweekly_salary": False,
-#         "receives_transport_allowance": False,
-#         "has_children_under_14": False,
-#     }
-#
-#     with pytest.raises(ValidationError) as exc_info:
-#         EmployeeIn(**invalid_data)
-#
-#     assert "Email inválido ou vazio." in str(exc_info.value)
+def test_create_employee_in_with_invalid_email_raises_error():
+    """
+    Testa se um ValidationError é levantado para um e-mail inválido.
+    """
+    invalid_data = {
+        "document": "796.346.000-18",
+        "name": "Carlos",
+        "pis": "12345678901",
+        "email": "email-invalido",  # Inválido
+        "cellphone": "11987654321",
+        "marital_status": "divorciado",
+        "skin_color": "preta",
+        "education_level": "pós-graduado",
+        "receives_biweekly_salary": False,
+        "receives_transport_allowance": False,
+        "has_children_under_14": False,
+    }
+
+    with pytest.raises(EmailInvalidError) as exc_info:
+        EmployeeIn(**invalid_data)
+
+    assert "Email inválido ou vazio." in str(exc_info.value)
 
 
 def test_create_full_employee_model_with_valid_data():
