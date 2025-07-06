@@ -9,14 +9,12 @@ def test_main_calls_uvicorn_run_correctly():
     """
     Garante que a função main() invoca uvicorn.run com os parâmetros corretos.
     """
-    # Cria um mock para settings com valores simulados
     mock_settings = MagicMock()
     mock_settings.host = "127.0.0.1"
     mock_settings.fastapi_port = 8080
     mock_settings.log_level = "info"
     mock_settings.reload = True
 
-    # Patch em uvicorn.run e no settings
     with (
         patch("app.__main__.uvicorn.run") as mock_uvicorn_run,
         patch("app.__main__.settings", mock_settings),
@@ -34,7 +32,6 @@ def test_main_calls_uvicorn_run_correctly():
 
 
 def test_main_script_runs(monkeypatch):
-    main_path = "app/__main__.py"  # ajuste para o local correto
+    main_path = "app/__main__.py"
     result = subprocess.run([sys.executable, main_path], capture_output=True, text=True)
-    # Se seu main levanta erro esperado, adapte conforme necessário
     assert result.returncode == 1
