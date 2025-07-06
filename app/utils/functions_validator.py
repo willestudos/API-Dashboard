@@ -28,8 +28,7 @@ def validate_cpf(cpf: str) -> str:
 
 
 def validate_email(email: str) -> str:
-
-    if email == "" or not re.fullmatch(EMAIL_REGEX, email):
+    if email == "" or not re.fullmatch(EMAIL_REGEX, email) or ".." in email:
         raise EmailInvalidError("Email inválido ou vazio.")
     return email
 
