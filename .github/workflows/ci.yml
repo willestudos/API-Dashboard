@@ -12,23 +12,23 @@ jobs:
 
     steps:
       # 1. Clona o repositório
-      - name: Checkout repository
+      - name: Clonando Repository
         uses: actions/checkout@v4
 
       # 2. Configura o Python
-      - name: Set up Python
+      - name: Configura o Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       # 3. Instala o Poetry de forma confiável usando uma ação dedicada
-      - name: Install Poetry
+      - name: Instala o Poetry
         uses: snok/install-poetry@v1
         with:
           virtualenvs-in-project: true # Cria o .venv dentro do projeto, facilitando o cache
 
       # 4. Habilita o cache para as dependências, acelerando o pipeline
-      - name: Load cached venv
+      - name: Carregar cache venv
         id: cached-poetry-dependencies
         uses: actions/cache@v4
         with:
@@ -36,11 +36,11 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       # 5. Instala as dependências SÓ SE não houver um cache válido
-      - name: Install dependencies
+      - name: Instala as dependências
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
 
       # 6. Executa os testes usando o ambiente do Poetry
-      - name: Run tests with coverage
+      - name: Iniciando teset de Cobertura
         run: |
           poetry run pytest --cov=app --cov-report=term-missing --cov-fail-under=90
