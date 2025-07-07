@@ -1,7 +1,7 @@
 import pytest
 
-from app.models.employees import Employee, EmployeeIn
-from app.utils.exceptions import CPFInvalidError, EmailInvalidError
+from app.schemas.employees_schema import Employee, EmployeeIn
+from app.utils.exceptions import UnprocessableData
 
 
 def test_create_employee_in_with_valid_data():
@@ -49,7 +49,7 @@ def test_create_employee_in_with_invalid_cpf_raises_error():
     }
 
     # Verifica se um ValidationError é levantado
-    with pytest.raises(CPFInvalidError) as exc_info:
+    with pytest.raises(UnprocessableData) as exc_info:
         EmployeeIn(**invalid_data)
     assert "Dígitos verificadores do CPF inválidos." in str(exc_info.value)
 
@@ -72,7 +72,7 @@ def test_create_employee_in_with_invalid_email_raises_error():
         "has_children_under_14": False,
     }
 
-    with pytest.raises(EmailInvalidError) as exc_info:
+    with pytest.raises(UnprocessableData) as exc_info:
         EmployeeIn(**invalid_data)
 
     assert "Email inválido ou vazio." in str(exc_info.value)
