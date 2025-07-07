@@ -34,7 +34,6 @@ def test_main_calls_uvicorn_run_correctly():
 
 
 def test_main_script_runs(monkeypatch):
-    main_path = "app/__main__.py"  # ajuste para o local correto
+    main_path = "app/__main__.py"
     result = subprocess.run([sys.executable, main_path], capture_output=True, text=True)
-    # Se seu main levanta erro esperado, adapte conforme necessário
     assert result.returncode == 1

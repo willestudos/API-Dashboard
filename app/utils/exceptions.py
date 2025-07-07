@@ -1,13 +1,11 @@
-class CPFInvalidError(Exception):
-    def __init__(self, message="CPF inválido."):
-        super().__init__(message)
+from fastapi import HTTPException, status
 
 
-class EmailInvalidError(Exception):
-    def __init__(self, message="E-mail inválido."):
-        super().__init__(message)
+class UnprocessableData(HTTPException):
+    def __init__(self, detail="Dados não processaveis."):
+        super().__init__(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=detail)
 
 
-class PhoneInvalidError(Exception):
-    def __init__(self, message="Telefone inválido."):
-        super().__init__(message)
+class ExistiException(HTTPException):
+    def __init__(self, detail="Este recurso ja existe."):
+        super().__init__(status_code=status.HTTP_409_CONFLICT, detail=detail)

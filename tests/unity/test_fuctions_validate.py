@@ -1,6 +1,6 @@
 import pytest
 
-from app.utils.exceptions import CPFInvalidError, EmailInvalidError, PhoneInvalidError
+from app.utils.exceptions import UnprocessableData
 from app.utils.functions_validator import (
     clean_cpf_cnpj_phone,
     validate_cpf,
@@ -55,7 +55,7 @@ def test_validate_email_accepts_valid_emails(valid_email):
     ],
 )
 def test_validate_email_raises_for_invalid_emails(invalid_email):
-    with pytest.raises(EmailInvalidError) as exc_info:
+    with pytest.raises(UnprocessableData) as exc_info:
         validate_email(invalid_email)
     assert "Email inválido" in str(exc_info.value)
 
@@ -97,7 +97,7 @@ def test_validate_phone_accepts_valid_phones(valid_phone):
     ],
 )
 def test_validate_phone_raises_error_for_invalid_phones(invalid_phone):
-    with pytest.raises(PhoneInvalidError):
+    with pytest.raises(UnprocessableData):
         validate_phone(invalid_phone)
 
 
@@ -131,5 +131,5 @@ def test_validate_cpf_accepts_valid_cpfs(cpf):
     ],
 )
 def test_validate_cpf_rejects_invalid_cpfs(cpf):
-    with pytest.raises(CPFInvalidError):
+    with pytest.raises(UnprocessableData):
         validate_cpf(cpf)
